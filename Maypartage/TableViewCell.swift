@@ -13,26 +13,28 @@ class TableViewCell: UITableViewCell {
     @IBOutlet weak var lieu: UILabel!
     @IBOutlet weak var imagee: UIImageView!
     @IBOutlet weak var pseudo: UILabel!
+    
+    @IBOutlet weak var vue: UIView!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
     }
 
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-
+  
     func configure(withEvent event: Story){
+        print(event.longi)
         self.pseudo.text=event.pseudo
         self.lieu.text=event.lieu
         
         if let data = event.photo as Data?{
             imagee.image = UIImage(data: data)
         }
+        
+       
+    
 
-        /*
+        
+    /*
         if let data = event.photo as Data?{
             imagee.image = UIImage(data: data)
         }*/

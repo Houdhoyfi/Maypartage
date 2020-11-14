@@ -7,10 +7,13 @@
 
 import UIKit
 import CoreData
+import CoreLocation
+class AddPStorie: UIViewController,UIImagePickerControllerDelegate,UITextFieldDelegate, UINavigationControllerDelegate, CLLocationManagerDelegate  {
+    var longitude:Double=0.0
+    var latitude:Double=0.0
 
-class AddPStorie: UIViewController,UIImagePickerControllerDelegate,UITextFieldDelegate, UINavigationControllerDelegate {
     var imgpicker = UIImagePickerController()
-
+    let locationManager = CLLocationManager()
     @IBOutlet weak var img: UIImageView!
     var fetch:NSFetchedResultsController<Story>?=nil
     @IBOutlet weak var photo: UIImageView!
@@ -23,6 +26,25 @@ class AddPStorie: UIViewController,UIImagePickerControllerDelegate,UITextFieldDe
     override func viewDidLoad() {
         super.viewDidLoad()
         imgpicker.delegate = self
+        locationManager.delegate = self
+        if CLLocationManager.locationServicesEnabled() {
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+            locationManager.requestWhenInUseAuthorization();
+            //demarage de mongps
+            locationManager.startUpdatingLocation()
+        }
+    }
+    
+    //localisation
+    func locationManager(_ manager: CLLocationManager,
+    didUpdateLocations locations: [CLLocation]) {
+        let location = locations[0]
+        latitude=location.coordinate.latitude
+        longitude=location.coordinate.longitude
+        //print("loca l ",(location.coordinate.latitude)+2)
+        //print("loca li ",(location.coordinate.longitude)+2)
+                
     }
     @IBAction func annuler(_ sender: Any) {
         dismiss(animated: true, completion: nil)
@@ -33,17 +55,7 @@ class AddPStorie: UIViewController,UIImagePickerControllerDelegate,UITextFieldDe
         imgpicker.allowsEditing = true
         present(imgpicker, animated: true, completion: nil)
     }
-    
-    /*
-    func openLibrary(){
-        if photo.isUserInteractionEnabled==true{
-            imgpicker.sourceType = .photoLibrary
-            imgpicker.allowsEditing = true
-            present(imgpicker, animated: true, completion: nil)
-            
-        }
-    }*/
-    
+
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         dismiss(animated: true, completion: nil)
 
@@ -64,48 +76,22 @@ class AddPStorie: UIViewController,UIImagePickerControllerDelegate,UITextFieldDe
     
     func enreg(){
         print(NSSearchPathForDirectoriesInDomains(.applicationSupportDirectory, .userDomainMask, true).last!);
-        
-        
+        let dateFormatter = DateFormatter()
+        var date = Date()
+        dateFormatter.dateStyle = .none
+        dateFormatter.timeStyle = .medium
+        print(dateFormatter.string(from: date))
         let story = Story(context: AppDelegate.viewContext)
         story.pseudo=pseudo.text
         story.lieu=lieu.text
         story.desc=descripti.text
         story.photo=self.imageData
+        story.heure=dateFormatter.string(from: date)
+        story.lati=latitude
+        story.longi=longitude
         try? AppDelegate.viewContext.save()
         print("save reussi")
-
-
-        /*
-       if let mfetch = fetch{
-        print("hbbjb")
-        let context = mfetch.managedObjectContext
-            let pseud = pseudo.text
-            let lie = lieu.text
-            let descr = descripti.text
-            
-            if let story = mStory{
-                story.pseudo=pseud
-                story.lieu=lie
-                story.desc=descr
-                
-            }else {
-                let nouStory = Story(context: context )
-                nouStory.lieu=lie
-                nouStory.pseudo=pseud
-                nouStory.desc=descr
-            }
-            
-            do {
-                try context.save()
-                    print("save reussi")
-                   } catch {
-                       let nserror = error as NSError
-                       fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-                }
-       }
-       // dismiss(animated: true, completion: nil)
         
-        */
         dismiss(animated: true, completion: nil)
     }
 }
