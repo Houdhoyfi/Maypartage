@@ -8,6 +8,7 @@
 import UIKit
 import CoreLocation
 import MapKit
+import CoreMotion
 class detail: UIViewController , CLLocationManagerDelegate {
     var long:Double=0.0
     var lat:Double=0.0
@@ -18,6 +19,7 @@ class detail: UIViewController , CLLocationManagerDelegate {
     let locationManager = CLLocationManager()
     override func viewDidLoad() {
         super.viewDidLoad()
+        motion()
         configureView()
         locationManager.delegate = self
         if CLLocationManager.locationServicesEnabled() {
@@ -65,6 +67,25 @@ class detail: UIViewController , CLLocationManagerDelegate {
             
     
      
+    }
+    
+    let motionManager = CMMotionManager()
+    func motion(){
+        if motionManager.isDeviceMotionAvailable {
+            motionManager.deviceMotionUpdateInterval = 0.01
+            motionManager.startDeviceMotionUpdates(to: .main) {
+               // [weak self]
+                (data, error) in
+                guard let data = data, error == nil else {
+                    return
+                }
+                
+                let rotation = data.gravity.x
+                if rotation > 0.30{
+                    self.navigationController?.popViewController(animated: true)
+                }
+            }
+        }
     }
     
     var detailItem: Story? {

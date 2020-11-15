@@ -8,6 +8,7 @@
 import UIKit
 import CoreData
 import CoreLocation
+import CoreMotion
 class AddPStorie: UIViewController,UIImagePickerControllerDelegate,UITextFieldDelegate, UINavigationControllerDelegate, CLLocationManagerDelegate  {
     var longitude:Double=0.0
     var latitude:Double=0.0
@@ -69,10 +70,10 @@ class AddPStorie: UIViewController,UIImagePickerControllerDelegate,UITextFieldDe
     
     @IBAction func envoyer(_ sender: Any) {
         enreg()
-        
-
        
     }
+    
+ 
     
     func enreg(){
         print(NSSearchPathForDirectoriesInDomains(.applicationSupportDirectory, .userDomainMask, true).last!);
