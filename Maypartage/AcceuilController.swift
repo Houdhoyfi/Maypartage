@@ -7,8 +7,8 @@
 
 import UIKit
 import CoreData
-
-class AccueilController:UITableViewController,NSFetchedResultsControllerDelegate{
+import AVFoundation
+class AccueilController:UITableViewController,NSFetchedResultsControllerDelegate,AVAudioPlayerDelegate{
     
     var annonces:[Story]=[]
     
@@ -26,7 +26,11 @@ class AccueilController:UITableViewController,NSFetchedResultsControllerDelegate
             return
         }
         annonces=stori
+        
+       
     }
+    
+    
     
     //pour recharcher les données
     override func viewWillAppear(_ animated: Bool) {
@@ -62,6 +66,8 @@ class AccueilController:UITableViewController,NSFetchedResultsControllerDelegate
         cell.configure(withEvent: annce)
         return cell
     }
+    
+
   
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
         switch type {
@@ -98,6 +104,21 @@ class AccueilController:UITableViewController,NSFetchedResultsControllerDelegate
         tableView.beginUpdates()
     }
     
-    
-  
+    override func becomeFirstResponder() -> Bool {
+        return true
+    }
+
+    override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+        if motion == .motionShake{
+            //print("téléphone secouer")
+            tableview.beginUpdates()
+        }
+    }
+    /*
+    override  func  motionEnded ( _  motion : UIEvent .EventSubtype , with  event : UIEvent ?) {
+         if  motion == .motionShake {
+            // shakeLabel .text = "Secoué, pas agité"
+        }
+    }
+  */
 }
