@@ -20,7 +20,7 @@ class Formulaire:UIViewController, AVAudioPlayerDelegate {
         QuestionVue.addGestureRecognizer(panGestureRecognizer)
         
                 do {
-                   let audioPath = Bundle.main.path(forResource: "vrai",ofType: "mp3")
+                   let audioPath = Bundle.main.path(forResource: "vrai2",ofType: "mp3")
                     let audioPath2 = Bundle.main.path(forResource: "faux",ofType: "mp3")
                     try player = AVAudioPlayer(contentsOf: NSURL(fileURLWithPath: audioPath!) as URL)
                     try player2 = AVAudioPlayer(contentsOf: NSURL(fileURLWithPath: audioPath2!) as URL)
@@ -84,7 +84,7 @@ class Formulaire:UIViewController, AVAudioPlayerDelegate {
     }
     
     func AlertExplication (){
-        let dialogMessage = UIAlertController(title: "Message", message: "Pour répondre à la question merci de déplacer le carré vers la droite pour répondre oui sinon vers gauche non pour répondre non ", preferredStyle: .alert)
+        let dialogMessage = UIAlertController(title: "Message", message: "Pour répondre à la question merci de déplacer le carré vers la droite pour répondre oui sinon vers la gauche pour répondre non ", preferredStyle: .alert)
         
         // creation bouton ok
         let ok = UIAlertAction(title: "OK", style: .default, handler: { (action) -> Void in

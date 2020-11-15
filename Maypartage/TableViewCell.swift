@@ -18,11 +18,18 @@ class TableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        
     }
 
   
     func configure(withEvent event: Story){
-        print(event.longi)
+        let dateFormatter = DateFormatter()
+        let date = Date()
+        dateFormatter.dateStyle = .none
+        dateFormatter.timeStyle = .medium
+        print(dateFormatter.string(from: date))
+        
+        print("event ",event.heure)
         self.pseudo.text=event.pseudo
         self.lieu.text=event.lieu
         

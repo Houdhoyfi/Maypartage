@@ -2,6 +2,7 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17511" systemVersion="19H2" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Story" representedClassName=".Story" syncable="YES" codeGenerationType="class">
         <attribute name="desc" optional="YES" attributeType="String"/>
+        <attribute name="heur" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="heure" optional="YES" attributeType="String"/>
         <attribute name="lati" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="lieu" optional="YES" attributeType="String"/>
@@ -10,6 +11,6 @@
         <attribute name="pseudo" optional="YES" attributeType="String"/>
     </entity>
     <elements>
-        <element name="Story" positionX="-63" positionY="-18" width="128" height="148"/>
+        <element name="Story" positionX="-63" positionY="-18" width="128" height="163"/>
     </elements>
 </model>

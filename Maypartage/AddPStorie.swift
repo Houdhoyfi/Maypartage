@@ -78,10 +78,10 @@ class AddPStorie: UIViewController,UIImagePickerControllerDelegate,UITextFieldDe
     func enreg(){
         print(NSSearchPathForDirectoriesInDomains(.applicationSupportDirectory, .userDomainMask, true).last!);
         let dateFormatter = DateFormatter()
-        var date = Date()
+        let date = Date()
         dateFormatter.dateStyle = .none
         dateFormatter.timeStyle = .medium
-        print(dateFormatter.string(from: date))
+        //print(dateFormatter.date(from: date))
         let story = Story(context: AppDelegate.viewContext)
         story.pseudo=pseudo.text
         story.lieu=lieu.text
