@@ -10,7 +10,7 @@ import UIKit
 class TableViewCell: UITableViewCell {
 
     @IBOutlet weak var heure: UILabel!
-    @IBOutlet weak var lieu: UILabel!
+    //@IBOutlet weak var lieu: UILabel!
     @IBOutlet weak var imagee: UIImageView!
     @IBOutlet weak var pseudo: UILabel!
     
@@ -23,15 +23,9 @@ class TableViewCell: UITableViewCell {
 
   
     func configure(withEvent event: Story){
-        let dateFormatter = DateFormatter()
-        let date = Date()
-        dateFormatter.dateStyle = .none
-        dateFormatter.timeStyle = .medium
-        print(dateFormatter.string(from: date))
-        
-        print("event ",event.heure)
-        self.pseudo.text=event.pseudo
-        self.lieu.text=event.lieu
+             self.pseudo.text=event.pseudo
+        //self.lieu.text=event.lieu
+        self.heure.text=event.heure
         
         if let data = event.photo as Data?{
             imagee.image = UIImage(data: data)

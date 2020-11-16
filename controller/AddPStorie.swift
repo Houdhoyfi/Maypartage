@@ -73,8 +73,6 @@ class AddPStorie: UIViewController,UIImagePickerControllerDelegate,UITextFieldDe
        
     }
     
- 
-    
     func enreg(){
         print(NSSearchPathForDirectoriesInDomains(.applicationSupportDirectory, .userDomainMask, true).last!);
         let dateFormatter = DateFormatter()
@@ -84,7 +82,7 @@ class AddPStorie: UIViewController,UIImagePickerControllerDelegate,UITextFieldDe
         //print(dateFormatter.date(from: date))
         let story = Story(context: AppDelegate.viewContext)
         story.pseudo=pseudo.text
-        story.lieu=lieu.text
+        //story.lieu=lieu.text
         story.desc=descripti.text
         story.photo=self.imageData
         story.heure=dateFormatter.string(from: date)
@@ -93,6 +91,8 @@ class AddPStorie: UIViewController,UIImagePickerControllerDelegate,UITextFieldDe
         try? AppDelegate.viewContext.save()
         print("save reussi")
         
-        dismiss(animated: true, completion: nil)
+        //dismiss(animated: true, completion: nil)
+        self.navigationController?.popViewController(animated: true)
+
     }
 }

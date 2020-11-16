@@ -51,22 +51,21 @@ class detail: UIViewController , CLLocationManagerDelegate {
     }
     
     func configureView() {
+        
         // Update the user interface for the detail item.
         if let detail = detailItem {
+            
             long=detail.longi
             lat=detail.lati
             if let descrip = self.descri {
                 descrip.text = detail.desc
             }
-            else
                 if let pseudo = self.psedo {
                     pseudo.text = detail.pseudo
                 }
             
         }
             
-    
-     
     }
     
     let motionManager = CMMotionManager()

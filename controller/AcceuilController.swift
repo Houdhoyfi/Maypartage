@@ -11,42 +11,60 @@ import AVFoundation
 class AccueilController:UITableViewController,NSFetchedResultsControllerDelegate,AVAudioPlayerDelegate{
     
     var annonces:[Story]=[]
-    
+    var fetchResultController: NSFetchedResultsController<Story>!
     var detailViewController: detail? = nil
     @IBOutlet var tableview: UITableView!
-    var fetchResultController: NSFetchedResultsController<Story>!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.reloadData()
         // Récupération des données dans la base de données
-        let request: NSFetchRequest<Story> = Story.fetchRequest()
-       
-        guard let stori = try? AppDelegate.viewContext.fetch(request)else {
-            return
-        }
-        annonces=stori
+       // let request: NSFetchRequest<Story> = Story.fetchRequest()
+        //guard let stori = try? AppDelegate.viewContext.fetch(request)else {
+          //  return
+       //}
+        //annonces=stori
+        let fetchRequest: NSFetchRequest<Story> = Story.fetchRequest()
+        let sortDescriptor = NSSortDescriptor(key: "pseudo", ascending: true)
+        fetchRequest.sortDescriptors = [sortDescriptor]
         
-       
+        if let appDelegate = (UIApplication.shared.delegate as? AppDelegate) {
+            let context = appDelegate.persistentContainer.viewContext
+            
+            fetchResultController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+            fetchResultController.delegate = self
+            
+            do {
+                try fetchResultController.performFetch()
+                if let fetchedObjects = fetchResultController.fetchedObjects {
+                    annonces =  fetchedObjects // Objets trouvés
+                    //print("anonce deb",annonces.count)
+                }
+            } catch {
+                print(error)
+            }
+        }
     }
-    
-    
     
     //pour recharcher les données
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        tableView.reloadData()
+        self.tableView.reloadData()
+        
+       
     }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.tableView.reloadData()
     
+    }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
             if segue.identifier == "showLocal" {
-                print("segue")
                 if let indexPath = tableView.indexPathForSelectedRow {
                     let controller = segue.destination as! detail
                     controller.detailItem =  annonces[indexPath.row]
                     detailViewController = controller
-   
-            }
+                }
             }
         }
     
@@ -61,26 +79,36 @@ class AccueilController:UITableViewController,NSFetchedResultsControllerDelegate
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "AcceuilCell", for: indexPath) as! TableViewCell
+        cell.layer.cornerRadius = cell.layer.frame.height/6
+        
         let annce = annonces[indexPath.row]
  
         cell.configure(withEvent: annce)
         return cell
     }
+
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        tableView.beginUpdates()
+        print("sdczdc")
+    }
+    
     
 
-  
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
         switch type {
             case .insert:
-                tableview.insertSections(IndexSet(integer: sectionIndex), with: .fade)
+                tableView.insertSections(IndexSet(integer: sectionIndex), with: .fade)
             case .delete:
-                tableview.deleteSections(IndexSet(integer: sectionIndex), with: .fade)
+                tableView.deleteSections(IndexSet(integer: sectionIndex), with: .fade)
             default:
                 return
         }
+        print("sdcsd")
     }
 
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        print("annonce fetch ",annonces.count)
+
         switch type {
             case .insert:
                 tableView.insertRows(at: [newIndexPath!], with: .fade)
@@ -99,26 +127,13 @@ class AccueilController:UITableViewController,NSFetchedResultsControllerDelegate
         print("annonce fetch ",annonces.count)
     }
     
-    
-    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        tableView.beginUpdates()
-    }
-    
-    override func becomeFirstResponder() -> Bool {
-        return true
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        tableView.endUpdates()
+        print("recharge endup")
     }
 
-    override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
-        if motion == .motionShake{
-            //print("téléphone secouer")
-            tableview.beginUpdates()
-        }
-    }
-    /*
-    override  func  motionEnded ( _  motion : UIEvent .EventSubtype , with  event : UIEvent ?) {
-         if  motion == .motionShake {
-            // shakeLabel .text = "Secoué, pas agité"
-        }
-    }
-  */
+
+    
+
+
 }
