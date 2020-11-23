@@ -8,11 +8,14 @@
 import AVFoundation
 import UIKit
 class Formulaire:UIViewController, AVAudioPlayerDelegate {
+    @IBOutlet weak var oui: UIBarButtonItem!
+    @IBOutlet weak var non: UIBarButtonItem!
     @IBOutlet weak var QuestionVue: UIView!
     var player : AVAudioPlayer?
     var player2 : AVAudioPlayer?
     @IBOutlet weak var question: UILabel!
-    
+    var countP:Int=0
+    var countM:Int=0
     override func viewDidLoad() {
         
         //question.text = "Avez vous aimer l'application ? "
@@ -53,11 +56,15 @@ class Formulaire:UIViewController, AVAudioPlayerDelegate {
         if translation.x > 0 {
             QuestionVue.backgroundColor = UIColor.green
             player?.play()
+           // countP=countP+1
             afficheAlert()
+            oui.title = " \(countP)"
         } else {
             QuestionVue.backgroundColor=UIColor.red
             player2?.play()
+           // countM=countM-1
             afficheAlert()
+            non.title = "\(countM)"
         }
 
     }
@@ -97,13 +104,7 @@ class Formulaire:UIViewController, AVAudioPlayerDelegate {
         DispatchQueue.main.async{
              self.present(dialogMessage, animated: true, completion: nil)
         }
-        /*
-        let when = DispatchTime.now() + 1
-        DispatchQueue.main.asyncAfter(deadline: when){
-            self.present(dialogMessage, animated: true, completion: nil)
-            
-      }*/
-        
+ 
     }
     
     

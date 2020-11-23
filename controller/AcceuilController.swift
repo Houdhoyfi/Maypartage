@@ -19,11 +19,8 @@ class AccueilController:UITableViewController,NSFetchedResultsControllerDelegate
         super.viewDidLoad()
         self.tableView.reloadData()
         // Récupération des données dans la base de données
-       // let request: NSFetchRequest<Story> = Story.fetchRequest()
-        //guard let stori = try? AppDelegate.viewContext.fetch(request)else {
-          //  return
-       //}
-        //annonces=stori
+        tableView.rowHeight=(UIScreen.main.bounds.width / 1.5
+        )
         let fetchRequest: NSFetchRequest<Story> = Story.fetchRequest()
         let sortDescriptor = NSSortDescriptor(key: "pseudo", ascending: true)
         fetchRequest.sortDescriptors = [sortDescriptor]
@@ -79,7 +76,7 @@ class AccueilController:UITableViewController,NSFetchedResultsControllerDelegate
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "AcceuilCell", for: indexPath) as! TableViewCell
-        cell.layer.cornerRadius = cell.layer.frame.height/6
+        cell.layer.cornerRadius = cell.layer.frame.height/12
         
         let annce = annonces[indexPath.row]
  
@@ -105,7 +102,29 @@ class AccueilController:UITableViewController,NSFetchedResultsControllerDelegate
         }
         print("sdcsd")
     }
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+                   return true
+            
+    }
 
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            //try? AppDelegate.viewContext.save()
+            let appDelegate =  AppDelegate.self
+
+            let context =  appDelegate.viewContext
+            let anoncesuppr = self.fetchResultController.object(at: indexPath)
+            context.delete(anoncesuppr)
+            do {
+                try appDelegate.viewContext.save()
+            } catch {
+                let nserror = error as NSError
+                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+            }
+        }
+    }
+
+    
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         print("annonce fetch ",annonces.count)
 

@@ -14,6 +14,7 @@ class TableViewCell: UITableViewCell {
     @IBOutlet weak var imagee: UIImageView!
     @IBOutlet weak var pseudo: UILabel!
     
+    @IBOutlet weak var MiniDesc: UILabel!
     @IBOutlet weak var vue: UIView!
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -26,19 +27,14 @@ class TableViewCell: UITableViewCell {
              self.pseudo.text=event.pseudo
         //self.lieu.text=event.lieu
         self.heure.text=event.heure
+        self.MiniDesc.text=event.desc
         
         if let data = event.photo as Data?{
             imagee.image = UIImage(data: data)
         }
         
        
-    
 
-        
-    /*
-        if let data = event.photo as Data?{
-            imagee.image = UIImage(data: data)
-        }*/
         
       }
 
