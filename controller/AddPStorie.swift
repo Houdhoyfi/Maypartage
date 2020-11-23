@@ -75,14 +75,23 @@ class AddPStorie: UIViewController,UIImagePickerControllerDelegate,UITextFieldDe
     
     func enreg(){
         print(NSSearchPathForDirectoriesInDomains(.applicationSupportDirectory, .userDomainMask, true).last!);
+        
+        if pseudo.text == "" || descripti.text == "" {
+              let alertController = UIAlertController(title: "Oups", message: "Vous ne pouvez pas enregistrer cette storie car tous les champs ne sont pas renseignés. Merci de réessayer.", preferredStyle: .alert)
+              let alertAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+              
+              alertController.addAction(alertAction)
+              present(alertController, animated: true, completion: nil)
+              
+              return
+          }
+          
         let dateFormatter = DateFormatter()
         let date = Date()
         dateFormatter.dateStyle = .none
         dateFormatter.timeStyle = .medium
-        //print(dateFormatter.date(from: date))
         let story = Story(context: AppDelegate.viewContext)
         story.pseudo=pseudo.text
-        //story.lieu=lieu.text
         story.desc=descripti.text
         story.photo=self.imageData
         story.heure=dateFormatter.string(from: date)
@@ -92,7 +101,8 @@ class AddPStorie: UIViewController,UIImagePickerControllerDelegate,UITextFieldDe
         print("save reussi")
         
         dismiss(animated: true, completion: nil)
-        //self.navigationController?.popViewController(animated: true)
 
     }
+    
+    
 }

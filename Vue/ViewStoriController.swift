@@ -9,15 +9,15 @@ import UIKit
 import CoreData
 class ViewStoriController : UIViewController{
     
+    @IBOutlet weak var vue: UIView!
     @IBOutlet weak var navigat: UINavigationBar!
     @IBOutlet weak var photo: UIImageView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        //view.backgroundColor=UIColor.red
+        //view.isOpaque=true
         configureView()
-        
-        
-        
     }
     
     
@@ -31,7 +31,7 @@ class ViewStoriController : UIViewController{
         }
     }
     
-    var detailItem: Story? {
+    var detailItem: Story2? {
         didSet {
             configureView()
             

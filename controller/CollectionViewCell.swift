@@ -21,8 +21,7 @@ class CollectionViewCell: UICollectionViewCell {
     }
     
     
-    func configure(withEvent event: Story){
-             self.pseudo.text=event.pseudo
+    func configure(withEvent event: Story2){
         if let data = event.photo as Data?{
             imageStorie.image = UIImage(data: data)
         }
