@@ -8,34 +8,32 @@
 import UIKit
 import CoreData
 import AVFoundation
-class AccueilController:UITableViewController,NSFetchedResultsControllerDelegate,AVAudioPlayerDelegate{
+class AccueilController:UITableViewController,NSFetchedResultsControllerDelegate{
     
     var annonces:[Story]=[]
     var fetchResultController: NSFetchedResultsController<Story>!
     var detailViewController: detail? = nil
     @IBOutlet var tableview: UITableView!
 
+    @IBOutlet weak var buttonStorie: UIBarButtonItem!
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tableView.reloadData()
-        // Récupération des données dans la base de données
-        tableView.rowHeight=(UIScreen.main.bounds.width / 1.5
-        )
+        
+        //self.tableView.reloadData()
+        //spécifié la taille des cellules de la tableView
+        tableView.rowHeight=(UIScreen.main.bounds.width / 1.5)
+        // Récupération des données dans la base
         let fetchRequest: NSFetchRequest<Story> = Story.fetchRequest()
         let sortDescriptor = NSSortDescriptor(key: "pseudo", ascending: true)
         fetchRequest.sortDescriptors = [sortDescriptor]
-        
         if let appDelegate = (UIApplication.shared.delegate as? AppDelegate) {
             let context = appDelegate.persistentContainer.viewContext
-            
             fetchResultController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
             fetchResultController.delegate = self
-            
             do {
                 try fetchResultController.performFetch()
                 if let fetchedObjects = fetchResultController.fetchedObjects {
                     annonces =  fetchedObjects // Objets trouvés
-                    //print("anonce deb",annonces.count)
                 }
             } catch {
                 print(error)
@@ -46,15 +44,15 @@ class AccueilController:UITableViewController,NSFetchedResultsControllerDelegate
     //pour recharcher les données
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.tableView.reloadData()
-        
+        //self.tableView.reloadData()
        
     }
+    /*
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.tableView.reloadData()
     
-    }
+    }*/
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
             if segue.identifier == "showLocal" {
                 if let indexPath = tableView.indexPathForSelectedRow {
@@ -64,9 +62,8 @@ class AccueilController:UITableViewController,NSFetchedResultsControllerDelegate
                 }
             }
         }
-    
+    //nombre de section de la tableview
     override func numberOfSections(in tableView: UITableView) -> Int {
-        
         return 1;
     }
     
@@ -86,7 +83,7 @@ class AccueilController:UITableViewController,NSFetchedResultsControllerDelegate
 
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         tableView.beginUpdates()
-        print("sdczdc")
+       
     }
     
     
@@ -100,7 +97,7 @@ class AccueilController:UITableViewController,NSFetchedResultsControllerDelegate
             default:
                 return
         }
-        print("sdcsd")
+        
     }
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
                    return true
@@ -148,11 +145,9 @@ class AccueilController:UITableViewController,NSFetchedResultsControllerDelegate
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         tableView.endUpdates()
-        print("recharge endup")
+        
     }
 
-
     
-
 
 }

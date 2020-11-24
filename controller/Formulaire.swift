@@ -56,38 +56,44 @@ class Formulaire:UIViewController, AVAudioPlayerDelegate {
         if translation.x > 0 {
             QuestionVue.backgroundColor = UIColor.green
             player?.play()
-           // countP=countP+1
+           
             afficheAlert()
+            let when = DispatchTime.now()+1
+            DispatchQueue.main.asyncAfter(deadline: when){
+                //self.non.title = "\(self.countM)"
+                
+          }
+            countP=countP+1
             oui.title = " \(countP)"
         } else {
             QuestionVue.backgroundColor=UIColor.red
             player2?.play()
-           // countM=countM-1
+           //
             afficheAlert()
+            let when = DispatchTime.now()+1
+            DispatchQueue.main.asyncAfter(deadline: when){
+          }
+            countM=countM+1
             non.title = "\(countM)"
+            
         }
 
     }
     
     func afficheAlert(){
         let dialogMessage = UIAlertController(title: "Message", message: "Merci pour votre réponse ", preferredStyle: .alert)
-        
         // creation bouton ok
         let ok = UIAlertAction(title: "OK", style: .default, handler: { (action) -> Void in
             
             self.dismiss(animated: true, completion: nil)
          })
-        
         //Add boutton ok
         dialogMessage.addAction(ok)
         // Presentet alerte
-        let when = DispatchTime.now() + 1
+        let when = DispatchTime.now()
         DispatchQueue.main.asyncAfter(deadline: when){
             self.present(dialogMessage, animated: true, completion: nil)
-            
       }
-        
-
     }
     
     func AlertExplication (){
@@ -95,12 +101,10 @@ class Formulaire:UIViewController, AVAudioPlayerDelegate {
         
         // creation bouton ok
         let ok = UIAlertAction(title: "OK", style: .default, handler: { (action) -> Void in
-            
          })
-        
-        //Add boutton ok
+        //Ajouter boutton ok
         dialogMessage.addAction(ok)
-        // Presentet alerte
+        // Presenter alerte
         DispatchQueue.main.async{
              self.present(dialogMessage, animated: true, completion: nil)
         }

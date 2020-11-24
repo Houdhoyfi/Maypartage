@@ -22,7 +22,7 @@ class CollectionController : UIViewController,UICollectionViewDelegate,UICollect
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = w/15
         layout.minimumInteritemSpacing = w/15
-        layout.itemSize = CGSize(width: w/3, height: w/2)
+        layout.itemSize = CGSize(width: w/4, height: w/2)
         collectView.collectionViewLayout=layout
         let fetchRequest: NSFetchRequest<Story2> = Story2.fetchRequest()
         let sortDescriptor = NSSortDescriptor(key: "photo", ascending: true)
@@ -48,13 +48,13 @@ class CollectionController : UIViewController,UICollectionViewDelegate,UICollect
     }
     
     
-    
+    /*
     func collectionView(_ collectionView: UICollectionView, layout
             collectionViewLayout: UICollectionViewLayout,
                             minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 20.0
     }
-    
+    */
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let w = collectionView.frame.size.width
         return CGSize(width: w/3, height: w/2)
