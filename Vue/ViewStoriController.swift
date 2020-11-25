@@ -15,26 +15,24 @@ class ViewStoriController : UIViewController{
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        //view.backgroundColor=UIColor.red
-        //view.isOpaque=true
         configureView()
     }
     
-    
+    //Configuration de la vue pour afficher la photo correspondante
+    //de la Collection Viewcell
     func configureView() {
-        if let detail = detailItem {
-            print("config")
+        if let phot = PhotoStorie {
             if let imagee = self.photo {
-                imagee.image = UIImage(data: (detail.photo as Data?)!)
+                imagee.image = UIImage(data: (phot.photo as Data?)!)
             }
-            
         }
     }
     
-    var detailItem: Story2? {
+    var PhotoStorie: Story2? {
         didSet {
             configureView()
             
         }
     }
+    
 }

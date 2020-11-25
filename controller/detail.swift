@@ -19,32 +19,32 @@ class detail: UIViewController , CLLocationManagerDelegate {
     let locationManager = CLLocationManager()
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         motion()
         configureView()
         locationManager.delegate = self
         if CLLocationManager.locationServicesEnabled() {
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        //demande de l'autorisation pour localistaion
          locationManager.requestWhenInUseAuthorization();
-            //demarage de mongps
-           locationManager.startUpdatingLocation()
+        //demarrage de mongps
+        locationManager.startUpdatingLocation()
         }
     }
+    
     //localisation
     func locationManager(_ manager: CLLocationManager,
     didUpdateLocations locations: [CLLocation]) {
-        //let location = locations[0]
-       // print("loca l ",(location.coordinate.longitude))
-       // print("loca li ",(location.coordinate.longitude)+0.0)
         let span : MKCoordinateSpan = MKCoordinateSpan.init(latitudeDelta: 0.01, longitudeDelta: 0.01)
         let maylocation :CLLocationCoordinate2D = CLLocationCoordinate2D.init(latitude: lat, longitude: long)
         let region : MKCoordinateRegion = MKCoordinateRegion.init(center: maylocation,span: span)
         mymap.setRegion(region, animated: true)
+        //permet d'afficher le point bleu sur la carte
         self.mymap.showsUserLocation=true
         
-        
- 
     }
+    
     func locationManager(_ manager: CLLocationManager,
     didFailWithError error: Error) {
     print(error)
@@ -52,7 +52,7 @@ class detail: UIViewController , CLLocationManagerDelegate {
     
     func configureView() {
         
-        // Update the user interface for the detail item.
+        //permet de configurer et mettre à jour le détail des publications
         if let detail = detailItem {
             
             long=detail.longi
@@ -69,17 +69,20 @@ class detail: UIViewController , CLLocationManagerDelegate {
     }
     
     let motionManager = CMMotionManager()
+    // permet de détecter si la gravitation du téléphone
     func motion(){
         if motionManager.isDeviceMotionAvailable {
             motionManager.deviceMotionUpdateInterval = 0.01
             motionManager.startDeviceMotionUpdates(to: .main) {
-               // [weak self]
+                
                 (data, error) in
                 guard let data = data, error == nil else {
                     return
                 }
                 
                 let rotation = data.gravity.x
+                //si la graviation de x > 0.30
+                //on retourne à la vue de départ
                 if rotation > 0.30{
                     self.navigationController?.popViewController(animated: true)
                 }
@@ -88,10 +91,7 @@ class detail: UIViewController , CLLocationManagerDelegate {
     }
     
     var detailItem: Story? {
-        
         didSet {
-            
-            // Update the view.
             configureView()
             
         }

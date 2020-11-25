@@ -20,7 +20,8 @@ class CollectionViewCell: UICollectionViewCell {
         
     }
     
-    
+    //Permet d'assigner les images des stories dans coredata
+    //au items de la collectionView
     func configure(withEvent event: Story2){
         if let data = event.photo as Data?{
             imageStorie.image = UIImage(data: data)

@@ -4,21 +4,19 @@
 //
 //  Created by YOUSSOUF HOUDHOYFI on 10/31/20.
 //
-
+//la classe pour qui gère la fil d'actualité des publications
 import UIKit
 import CoreData
 import AVFoundation
 class AccueilController:UITableViewController,NSFetchedResultsControllerDelegate{
-    
-    var annonces:[Story]=[]
+    var publication:[Story]=[]
     var fetchResultController: NSFetchedResultsController<Story>!
     var detailViewController: detail? = nil
     @IBOutlet var tableview: UITableView!
-
     @IBOutlet weak var buttonStorie: UIBarButtonItem!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         //self.tableView.reloadData()
         //spécifié la taille des cellules de la tableView
         tableView.rowHeight=(UIScreen.main.bounds.width / 1.5)
@@ -33,7 +31,7 @@ class AccueilController:UITableViewController,NSFetchedResultsControllerDelegate
             do {
                 try fetchResultController.performFetch()
                 if let fetchedObjects = fetchResultController.fetchedObjects {
-                    annonces =  fetchedObjects // Objets trouvés
+                    publication =  fetchedObjects // Objets trouvés
                 }
             } catch {
                 print(error)
@@ -41,42 +39,37 @@ class AccueilController:UITableViewController,NSFetchedResultsControllerDelegate
         }
     }
     
-    //pour recharcher les données
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         //self.tableView.reloadData()
        
     }
-    /*
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        self.tableView.reloadData()
-    
-    }*/
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-            if segue.identifier == "showLocal" {
-                if let indexPath = tableView.indexPathForSelectedRow {
-                    let controller = segue.destination as! detail
-                    controller.detailItem =  annonces[indexPath.row]
-                    detailViewController = controller
+        if segue.identifier == "showLocal" {
+            if let indexPath = tableView.indexPathForSelectedRow {
+                let controller = segue.destination as! detail
+                controller.detailItem =  publication[indexPath.row]
+                detailViewController = controller
                 }
             }
         }
+    
     //nombre de section de la tableview
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1;
     }
     
+    // le nombre de ligne du table view
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return annonces.count;
+        return publication.count;
             }
-
+    
+    //permet la configuration et création de la cellule qui se trouve à l'indice indexPath
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "AcceuilCell", for: indexPath) as! TableViewCell
         cell.layer.cornerRadius = cell.layer.frame.height/12
-        
-        let annce = annonces[indexPath.row]
- 
+        let annce = publication[indexPath.row]
         cell.configure(withEvent: annce)
         return cell
     }
@@ -97,18 +90,18 @@ class AccueilController:UITableViewController,NSFetchedResultsControllerDelegate
             default:
                 return
         }
-        
     }
+    
+    //permet de rendre la tableview editable
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
                    return true
             
     }
-
+    
+    // permet la suppression d'une publication
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            //try? AppDelegate.viewContext.save()
             let appDelegate =  AppDelegate.self
-
             let context =  appDelegate.viewContext
             let anoncesuppr = self.fetchResultController.object(at: indexPath)
             context.delete(anoncesuppr)
@@ -121,10 +114,8 @@ class AccueilController:UITableViewController,NSFetchedResultsControllerDelegate
         }
     }
 
-    
+    //permet l'ajout , ou la suppression d'une ligne dans la tableView
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        print("annonce fetch ",annonces.count)
-
         switch type {
             case .insert:
                 tableView.insertRows(at: [newIndexPath!], with: .fade)
@@ -135,12 +126,10 @@ class AccueilController:UITableViewController,NSFetchedResultsControllerDelegate
             default:
                 tableView.reloadData()
         }
-        
         guard let fetchedObjects = controller.fetchedObjects else {
             return
         }
-        annonces = fetchedObjects as! [Story]
-        print("annonce fetch ",annonces.count)
+        publication = fetchedObjects as! [Story]
     }
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {

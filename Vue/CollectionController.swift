@@ -8,13 +8,14 @@
 import UIKit
 import CoreData
 class CollectionController : UIViewController,UICollectionViewDelegate,UICollectionViewDataSource, NSFetchedResultsControllerDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate{
-    
     @IBOutlet var collectView: UICollectionView!
-    var annonces:[Story2]=[]
+    //Declaration des variables
+    var collec:[Story2]=[]
     var imgpicker = UIImagePickerController()
     var fetchResultController: NSFetchedResultsController<Story2>!
     var imageData:Data?=nil
     var detailViewController: ViewStoriController? = nil
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         imgpicker.delegate = self
@@ -24,37 +25,27 @@ class CollectionController : UIViewController,UICollectionViewDelegate,UICollect
         layout.minimumInteritemSpacing = w/15
         layout.itemSize = CGSize(width: w/4, height: w/2)
         collectView.collectionViewLayout=layout
+        //requete vers coreData pour ensuite
+        //ajouter les éléméents dans le tableau annonces
         let fetchRequest: NSFetchRequest<Story2> = Story2.fetchRequest()
         let sortDescriptor = NSSortDescriptor(key: "photo", ascending: true)
         fetchRequest.sortDescriptors = [sortDescriptor]
-        
         if let appDelegate = (UIApplication.shared.delegate as? AppDelegate) {
             let context = appDelegate.persistentContainer.viewContext
-            
             fetchResultController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
             fetchResultController.delegate = self
-            
             do {
                 try fetchResultController.performFetch()
                 if let fetchedObjects = fetchResultController.fetchedObjects {
-                    annonces =  fetchedObjects // Objets trouvés
-                    print("anonce deb",annonces.count)
+                    collec =  fetchedObjects // Objets trouvés
+                    
                 }
             } catch {
                 print(error)
             }
         }
-   
     }
-    
-    
-    /*
-    func collectionView(_ collectionView: UICollectionView, layout
-            collectionViewLayout: UICollectionViewLayout,
-                            minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 20.0
-    }
-    */
+    //définir la taille des items de la CollectionView
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let w = collectionView.frame.size.width
         return CGSize(width: w/3, height: w/2)
@@ -64,64 +55,67 @@ class CollectionController : UIViewController,UICollectionViewDelegate,UICollect
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         collectView.collectionViewLayout.invalidateLayout();
     }
+    
+    // Permet de définir le nombre d'items dans la CollectionView
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return annonces.count
+        return collec.count
     }
-
+    
+    
+    //pour faire les transitions vers la page
+    //qui affiche la photo des storie qui sont dans collectionView
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
             if segue.identifier == "StorieVue" {
                 if let indexPath = collectView.indexPathsForSelectedItems?.first{
                     let controller = segue.destination as! ViewStoriController
-                   controller.detailItem = annonces[indexPath.row]
+                    controller.PhotoStorie = collec[indexPath.row]
                     detailViewController = controller
-                    print("shown")
-                    
                 }
-            
             }
         }
-    
+    //permet la configuration des items dans
+    //la collectionVue
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectView.dequeueReusableCell(withReuseIdentifier: "cellCo", for: indexPath) as! CollectionViewCell
         cell.layer.cornerRadius = cell.layer.frame.height/10
         cell.layer.borderWidth = 2
         cell.layer.borderColor = UIColor.blue.cgColor
-        let annce = annonces[indexPath.row]
-        cell.configure(withEvent: annce)
+        let sto = collec[indexPath.row]
+        cell.configure(withEvent: sto)
         return cell
     }
     
-    
+    //permet d'ouvrir l'application camera du téléphone
     @IBAction func prendrePhoto(_ sender: Any) {
         imgpicker.sourceType = .camera
         imgpicker.allowsEditing = true
         present(imgpicker, animated: true, completion: nil)
         
     }
-    
+    //pour presenter la photo prise par l'utilisateur sur la vue
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         dismiss(animated: true, completion: nil)
-
         guard let chosenImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage else {
              return
            }
-        
         self.imageData = chosenImage.jpegData(compressionQuality: 3)
-        print(NSSearchPathForDirectoriesInDomains(.applicationSupportDirectory, .userDomainMask, true).last!);
+        //print(NSSearchPathForDirectoriesInDomains(.applicationSupportDirectory, .userDomainMask, true).last!);
+        
         let story = Story2(context: AppDelegate.viewContext)
         story.photo=self.imageData
+        //enregistrement de la photo dans coreData
         try? AppDelegate.viewContext.save()
+        
         print("save reussi")
         
         self.navigationController?.popViewController(animated: true)
         
         let alert = UIAlertController(title: "", message: "storie ajouté ", preferredStyle: .alert)
               self.present(alert, animated: true, completion: nil)
-
-              // change to desired number of seconds (in this case 5 seconds)
+        // le délai : on attend 3 seconde et ensuite
+        //on affiche l'alerte
               let when = DispatchTime.now() + 3
               DispatchQueue.main.asyncAfter(deadline: when){
-                // your code with delay
                 alert.dismiss(animated: true, completion: nil)
             }
     }
